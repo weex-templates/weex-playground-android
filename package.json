@@ -1,0 +1,22 @@
+{
+  "name": "weex-playground-android",
+  "version": "1.0.0",
+  "description": "Template for preview weex code on android platform",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/weex-templates/weex-playground-android.git"
+  },
+  "keywords": [
+    "weex"
+  ],
+  "author": "Mario <fatterrole@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/weex-templates/weex-playground-ios/issues"
+  },
+  "homepage": "https://github.com/weex-templates/weex-playground-ios#readme"
+}
