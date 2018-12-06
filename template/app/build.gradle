@@ -62,7 +62,7 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.taobao.android:weex_sdk:0.16.0'
+    compile 'com.taobao.android:weex_sdk:0.18.0'
     compile 'com.google.code.findbugs:jsr305:2.0.1'
     compile 'com.squareup.okhttp:okhttp:2.3.0'
     compile 'com.squareup.okhttp:okhttp-ws:2.3.0'
@@ -73,7 +73,7 @@ dependencies {
     compile "com.android.support:appcompat-v7:${project.supportLibVersion}"
     compile "com.android.support:design:${project.supportLibVersion}"
     compile "com.android.support:support-annotations:${project.supportLibVersion}"
-    compile 'com.taobao.android:weex_inspector:0.10.0.5'
+    compile 'com.taobao.android:weex_inspector:0.18.0.5'
     compile 'com.journeyapps:zxing-android-embedded:3.4.0'
     // PLUGIN GRADLE EXTENSIONS START
     compile 'com.taobao.android:weexplugin-loader:1.3'
