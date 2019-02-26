@@ -21,12 +21,12 @@ import com.weex.app.util.Constants;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.taobao.weex.WXEnvironment;
-import com.taobao.weex.WXRenderErrorCode;
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.WXSDKInstance;
 import com.taobao.weex.ui.component.NestedContainer;
 import com.taobao.weex.utils.WXLogUtils;
 import com.taobao.weex.utils.WXSoInstallMgrSdk;
+import com.taobao.weex.common.WXErrorCode;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -162,7 +162,7 @@ public class WXPageActivity extends AbsWeexActivity implements
   public void onException(WXSDKInstance instance, String errCode, String msg) {
     mProgressBar.setVisibility(View.GONE);
     mTipView.setVisibility(View.VISIBLE);
-    if (TextUtils.equals(errCode, WXRenderErrorCode.WX_NETWORK_ERROR)) {
+    if (TextUtils.equals(errCode, WXErrorCode.WX_DEGRAD_ERR_NETWORK_CHECK_CONTENT_LENGTH_FAILED.getErrorCode())) {
       mTipView.setText(R.string.index_tip);
     } else {
       mTipView.setText("render error:" + errCode);
@@ -217,29 +217,22 @@ public class WXPageActivity extends AbsWeexActivity implements
 
   // Put up our own UI for how to handle the decoded contents.
   private void handleDecodeInternally(String code) {
-
-    if (!TextUtils.isEmpty(code)) {
-      Uri uri = Uri.parse(code);
-      if (uri.getQueryParameterNames().contains("bundle")) {
-        WXEnvironment.sDynamicMode = uri.getBooleanQueryParameter("debug", false);
-        WXEnvironment.sDynamicUrl = uri.getQueryParameter("bundle");
-        String tip = WXEnvironment.sDynamicMode ? "Has switched to Dynamic Mode" : "Has switched to Normal Mode";
-        Toast.makeText(this, tip, Toast.LENGTH_SHORT).show();
-        finish();
-        return;
-      } else if (uri.getQueryParameterNames().contains("_wx_devtool")) {
-        WXEnvironment.sRemoteDebugProxyUrl = uri.getQueryParameter("_wx_devtool");
-        WXEnvironment.sDebugServerConnectable = true;
-        WXSDKEngine.reload();
-        Toast.makeText(this, "devtool", Toast.LENGTH_SHORT).show();
-        return;
-      } else if (code.contains("_wx_debug")) {
-        uri = Uri.parse(code);
-        String debug_url = uri.getQueryParameter("_wx_debug");
-        WXSDKEngine.switchDebugModel(true, debug_url);
-        finish();
-      } else {
-        JSONObject data = new JSONObject();
+		if (!TextUtils.isEmpty(code)) {
+			Uri uri = Uri.parse(code);
+			if (uri.getPath().contains("dynamic/replace")) {
+				Intent intent = new Intent("weex.intent.action.dynamic", uri);
+				intent.addCategory("weex.intent.category.dynamic");
+				startActivity(intent);
+				finish();
+			} else if (uri.getQueryParameterNames().contains("_wx_devtool")) {
+				WXEnvironment.sRemoteDebugProxyUrl = uri.getQueryParameter("_wx_devtool");
+				WXEnvironment.sDebugServerConnectable = true;
+				WXSDKEngine.reload();
+				Toast.makeText(this, "devtool", Toast.LENGTH_SHORT).show();
+				finish();
+				return;
+			} else {
+				JSONObject data = new JSONObject();
         try {
           data.put("WeexBundle", Uri.parse(code).toString());
           Intent intent = new Intent(WXPageActivity.this, WXPageActivity.class);
@@ -248,8 +241,8 @@ public class WXPageActivity extends AbsWeexActivity implements
         } catch (JSONException e) {
           e.printStackTrace();
         }
-      }
-    }
+			}
+		}
   }
 
   @Override
